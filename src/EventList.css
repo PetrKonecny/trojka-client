@@ -1,0 +1,12 @@
+.EventList .CardHeader {
+	text-align: left;
+}
+
+.EventList .CardText {
+	text-align: left;
+}
+
+.EventList {
+	height: 100%;
+	overflow: auto;
+}
