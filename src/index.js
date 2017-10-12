@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { CookiesProvider } from 'react-cookie';
-
+import 'font-awesome/css/font-awesome.min.css'
 const store = configureStore()
 
 ReactDOM.render(

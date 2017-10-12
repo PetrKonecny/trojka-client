@@ -52,11 +52,14 @@ class EventForm extends Component {
         <div>
         <h4>Místo akce</h4>
         <Field name="place" component={RadioButtonGroup}>
-          <RadioButton value="sal" label="sál"/>
-          <RadioButton value="nadvori" label="nádvoří"/>
-          <RadioButton value="kavarna" label="kavárna"/>
-          <RadioButton value="minus_trojka" label="mínus trojka"/>
+          <RadioButton disabled={this.props.disabled && this.props.disabled.find((place)=>place == "Sál") != null} value="sal" label="sál"/>
+          <RadioButton disabled={this.props.disabled && this.props.disabled.find((place)=>place == "Nádvoří") != null} value="kavarna" label="kavárna"/>
+          <RadioButton disabled={this.props.disabled && this.props.disabled.find((place)=>place == "Kavárna") != null} value="nadvori" label="nádvoří"/>
+          <RadioButton disabled={this.props.disabled && this.props.disabled.find((place)=>place == "Mínus trojka") != null} value="minus_trojka" label="mínus trojka"/>
         </Field>
+        <div style={{opacity: '0.3', 'marginTop': '16'}}>
+        {this.props.disabled && "Některá místa nejsou dostupná, protože zde už nějaká akce v tomto datu probíhá"}
+        </div>
         </div>
         <div>
           <Field name="anotation" hintText="anotace" multiLine={true} rows={4} component={TextField} floatingLabelText="anotace"/>

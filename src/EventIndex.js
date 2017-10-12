@@ -11,9 +11,9 @@ import {Link} from 'react-router-dom'
 class EventIndex extends Component {
   render() {
     return (
-      <span>
+      <div className="EventIndex">
         {!this.props.isFetching && <EventCalendar events={this.props.events}></EventCalendar>}
-      </span>
+      </div>
     );
   }
 

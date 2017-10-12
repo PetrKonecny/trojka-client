@@ -11,24 +11,43 @@ import {
 import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux'
-import {login, checkLogin, openSnackbar} from './actions'
+import {login, checkLogin, openSnackbar, checkLoginAndLoadCode} from './actions'
 import { SubmissionError } from 'redux-form'
 import { withRouter } from 'react-router-dom'
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
+import './LoginIndex.css';
 
  class LoginIndex extends Component{
+
+  constructor(props) {
+      super(props);
+      this.state = {
+          shaking: false,
+          zoom: false
+      }
+  }
+
+  toggleShaking(){
+    this.setState({shaking: !this.state.shaking})
+  }
 
   render() {
     const { error, handleSubmit, pristine, reset, submitting } = this.props
     return (
-      <form onSubmit={handleSubmit(this.submit)}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <h1 style={{fontSize: '400%',marginBottom: '16px'}} className={this.state.zoom? "fade-out" : ""}>TROJKA</h1>
+        <i  style={{color: '#00bcd4', fontSize: '1500%'}} className={this.getClasses()} />
+      </div>
+      <form style={{padding: '16px', background: '#F5F5F6', display: 'flex', flexDirection: 'column', alignItems: 'center'}} className={this.state.zoom? "fade-out" : ""} onSubmit={handleSubmit(this.submit)}>
         <div>
-          <Field name="password" type="password" component={TextField}/>
+          <Field hintText="zadejte heslo" name="password" type="password" component={TextField}/>
         </div>
         <div>
-          <RaisedButton type='submit' label="Odeslat" primary={true} />
+          <RaisedButton type='submit' label="Přihlásit" primary={true} />
         </div>
       </form>
+      </div>
     )
   }
 
@@ -36,10 +55,11 @@ import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
     return this.props.dispatch(login(data.password))
     .then(this.successCallback)
     .catch((e)=>{
-      console.log(e)
       if(e.name==="ServerError"){
       this.props.dispatch(openSnackbar('Chyba komunikace se serverem'))
       }else if(e.name==="ValidationError"){
+        this.toggleShaking()
+        setTimeout(()=>{this.toggleShaking()},1000)
         throw new SubmissionError({password: 'špatné heslo'})
       }else{
         throw e;
@@ -52,10 +72,18 @@ import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
   }
 
   successCallback = (data)=>{
+    this.setState({zoom: true})
     const { cookies,history } = this.props;
     cookies.remove("PHPSESSID")
     cookies.set("PHPSESSID",data.trim())
-    this.props.dispatch(checkLogin()).then(()=>{history.push('/events')})
+    setTimeout(()=>{this.props.dispatch(checkLoginAndLoadCode()).then(()=>{history.push('/events')})},500)
+  }
+
+  getClasses(){
+    let string = "fa fa-coffee "
+    string += this.state.shaking? "shake " : " "
+    string += this.state.zoom? "zoom " : " "
+    return string
   }
 
 }
