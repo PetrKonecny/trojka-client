@@ -26,6 +26,11 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ShowEvent from './ShowEvent';
 import ListGraphic from './ListGraphic'
+import ListBar from './ListBar'
+import ListOsa from './ListOsa'
+import Headroom from 'react-headroom'
+import MainAppBar from './MainAppBar'
+
 const PrivateRoute = ({ auth: auth, component: Component, ...rest }) => (
       <Route {...rest} render={props => (
         auth ? (
@@ -43,31 +48,15 @@ class App extends Component {
 
   render(){
     return (
-      <div className={"App " + (this.props.admin ? "AppAdmin" : "")} style={{height: '100%', overflow: 'hidden'}}>
-      {this.props.admin && <AppBar className="AppBar"
-        title="Trojka"
-        showMenuIconButton={false}
-        iconElementRight={<div>{this.props.loggedIn && <div>
-          <IconButton className="toolbar-icon" containerElement={<Link to='/events'/>}   iconClassName="fa fa-calendar-o" />
-          <IconButton className="toolbar-icon" containerElement={<Link to='/events/table'/>}   iconClassName="fa fa-bars" />
-          <IconMenu
-            iconButtonElement={<IconButton><MoreVertIcon viewBox='0 -4 24 24' color='white'/></IconButton>}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          >
-            <MenuItem primaryText="Výpis pro bar" />
-            <MenuItem containerElement={<Link to={'/graphic/'+this.props.code}/>} primaryText="Výpis pro grafika" />
-            <MenuItem primaryText="Výpis pro OSA" />
-            <MenuItem onClick={this.onLogoutClicked} primaryText="Odhlásit" />
-          </IconMenu>
-        </div>}
-        </div>}
-      />}
+      <div className={"App " + (this.props.admin ? "AppAdmin" : "")}>
       {this.props.isFetching && <div className="Main-progress"><LinearProgress color="#000000" mode="indeterminate" /></div>}
+      <Headroom><MainAppBar/></Headroom>
       {this.props.checkedLogin && 
       <Switch>
       <Route exact path='/login' component={LoginIndex}/>
       <Route exact path='/graphic/:code' component={ListGraphic}/>
+      <Route exact path='/bar/:code' component={ListBar}/>
+      <Route exact path='/osa/:code' component={ListOsa}/>
       <PrivateRoute exact auth={this.props.loggedIn} path='/events' component={EventIndex}/>
       <PrivateRoute exact auth={this.props.loggedIn} path='/events/table' component={EventTable}/>
       <PrivateRoute exact auth={this.props.loggedIn} path='/events/create/:eventDate' component={CreateEvent}/>

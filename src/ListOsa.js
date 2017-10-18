@@ -4,9 +4,9 @@ import { fetchEvents } from './actions'
 import { EventList } from './EventList'
 import EventDetail from './EventDetail'
 
-class ListGraphic extends Component {
+class ListOsa extends Component {
 	render(){
-		return (<EventList events={this.props.events}><EventDetail hideFields={true} fieldsToShow={{name:true,date:true,time:true,place:true,anotation:true,anotation_poster:true}}></EventDetail></EventList>)
+		return (<EventList events={this.props.events}><EventDetail hideFields={true} fieldsToShow={{name:true,date:true,contact:true,osa:true}}></EventDetail></EventList>)
 	}
 
 
@@ -22,4 +22,4 @@ function mapStateToProps(state){
   }
 }
 
-export default connect(mapStateToProps)(ListGraphic)
+export default connect(mapStateToProps)(ListOsa)

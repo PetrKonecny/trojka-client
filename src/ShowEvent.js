@@ -2,17 +2,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import  EventDetail from './EventDetail'
 import { openSnackbar, fetchEventsAdmin } from './actions'
+import Headroom from 'react-headroom'
+import MainAppBar from './MainAppBar'
 
 class ShowEvent extends Component {
   
   render(){
     return(
-      this.props.event && <EventDetail data={this.props.event}></EventDetail>
+      <div className="content">
+        {this.props.event && <EventDetail data={this.props.event}></EventDetail>}
+      </div>
     )
   }
 
   componentWillMount() {
       this.props.dispatch(fetchEventsAdmin()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
+  }
+
+  componentDidMount () {
+      window.scrollTo(0, 0)
   }
   
 }

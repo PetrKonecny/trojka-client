@@ -38,6 +38,7 @@ class EventCalendar extends Component {
       	 events={this.props.events} 
          startAccessor="date" 
          endAccessor="date" 
+         titleAccessor= {(event)=>event.title +" - "+ event.place}
          components = {components}
          views={['month']} 
          onSelectSlot={(selected)=>{this.props.history.push('/events/create/'+moment(selected.start).format('YYYY-MM-DD'))}}

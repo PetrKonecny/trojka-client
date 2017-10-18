@@ -6,7 +6,6 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import './EventList.css';
 import moment from 'moment';
 import 'moment/locale/cs';
-import EventDetail from './EventDetail'
 
 export class EventList extends Component {
 
@@ -17,12 +16,12 @@ export class EventList extends Component {
           	<div style={{padding: '2px'}}>
           	<Card>
           	<CardHeader className="CardHeader"
-            actAsExpander={true}
-            showExpandableButton={true}
-      			title={event.title}
+            actAsExpander={this.props.children !== undefined}
+            showExpandableButton={this.props.children !== undefined}
+      			title={event.name}
       			subtitle={this.getDate(event)}
     		    />
-            <EventDetail expandable={true} data={this.props.events[10]}></EventDetail>
+            <div expandable={true}>{this.props.children && React.cloneElement(this.props.children, { data: event})}</div>
 		        </Card>
 		        </div>
            )}       

@@ -12,9 +12,7 @@ class EditEvent extends Component {
   render() {
     if(this.props.event && this.props.event.id){
       let date = new Date(this.props.event.date)
-      let time = moment(this.props.event.time,'HH:mm:ss').toDate()
-      let time_preparation = moment(this.props.event.time_preparation,'HH:mm:ss').toDate()
-      let eventWithDates = Object.assign({},this.props.event,{date: date, time: time, time_preparation: time_preparation, place: this.getPlace(this.props.event.place)})
+      let eventWithDates = Object.assign({},this.props.event,{place: this.getPlace(this.props.event.place)})
       return(<div className="EditEvent"><EventForm  onSubmit={this.onSubmit} initialValues={eventWithDates} /></div>)
     }else{
       return null

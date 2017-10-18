@@ -13,70 +13,36 @@ class EventDetail extends Component {
     if(this.props.data && this.props.data.id){
     return(
         <div className="EventDetail" style={{boxSizing: 'border-box', padding: '16px', paddingLeft: '32px'}}>
-            <h1>{this.props.data.name}</h1>
+            <h1>{this.getIsPropShown('name') && this.props.data.name}</h1>
           <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Datum konání: </b>{this.props.data.date}
-            </div>
-            <div className="event-detail-field">
-            <b>Čas konání: </b>{this.props.data.time}
-            </div>
-            <div className="event-detail-field">
-            <b>Čas začátku chystání: </b> {this.props.data.time_preparation}
-            </div>
-            <div className="event-detail-field">
-            <b>Místo konání: </b> {this.props.data.place}
-            </div>
-            <div className="event-detail-field">
-            <b>Typ akce: </b> {this.props.data.type}
-            </div>
-            <div className="event-detail-field">
-            <b>Odkaz na stránku: </b>{this.props.data.link}
-            </div>
-            <div className="event-detail-field">
-            <b>Předpokládaný počet osob: </b>{this.props.data.count}
-            </div>
+            {this.getFieldRender('date','Datum konání')}
+            {this.getFieldRender('time','Čas konání')}
+            {this.getFieldRender('time_preparation','Čas začátku chystání')}
+            {this.getFieldRender('place','Místo konání')}
+            {this.getFieldRender('type','Typ akce')}
+            {this.getFieldRender('link','Odkaz na stránku')}
+            {this.getFieldRender('count','Předpokládaný počet osob')}
           </div>
           <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Anotace: </b>{this.props.data.anotation}
-            </div>
-            <div className="event-detail-field">
-            <b>Anotace na plakát: </b>{this.props.data.anotation_poster}
-            </div>
+            {this.getFieldRender('anotation','Anotace')}
+            {this.getFieldRender('anotation_poster','Anotace na plakát')}
           </div>
           <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Zvukař: </b>{this.props.data.sound}
-            </div>
-            <div className="event-detail-field">
-            <b>Poznámky ke zvuku: </b>{this.props.data.sound_more}
-            </div>
-            <div className="event-detail-field">
-            <b>Osvětlení: </b>{this.props.data.lights}
-            </div>
-            <div className="event-detail-field">
-            <b>Poznámky k osvětlení: </b> {this.props.data.lights_more}
-            </div>
+            {this.getFieldRender('sound','Zvukař')}
+            {this.getFieldRender('sound_more','Poznámky ke zvuku')}
+            {this.getFieldRender('lights','Osvětlení')}
+            {this.getFieldRender('lights_more','Poznámky k osvětlení')}
+            {this.getFieldRender('count','Předpokládaný počet osob')}
           </div>
           <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Zodpovědná osoba: </b>{this.props.data.contact}
-            </div>
-            <div className="event-detail-field">
-            <b>Telefon: </b>{this.props.data.phone}
-            </div>
-            <div className="event-detail-field">
-            <b>Kontaktní email: </b>{this.props.data.mail}
-            </div>
-            <div className="event-detail-field">
-            <b>Zastupováno OSA: </b>{this.props.data.osa}
-            </div>
+            {this.getFieldRender('contact','Zodpovědná osoba')}
+            {this.getFieldRender('org','Organizace')}
+            {this.getFieldRender('phone','Telefon')}
+            {this.getFieldRender('mail','Kontaktní email')}
+            {this.getFieldRender('osa','Zastupováno OSA')}
           </div>
           <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Hodnocení: </b>{this.props.data.rating}
-            </div>
+            {this.getFieldRender('rating','Hodnocení')}
           </div>
           <Divider/>
           <div style={{paddingTop: '12px'}}>
@@ -93,6 +59,16 @@ class EventDetail extends Component {
    }
    onCopyEventClicked = () => {
       this.refs.datepicker.openDialog()
+   }
+
+   getIsPropShown = (param)=>{
+    return !this.props.hideFields || (this.props.fieldsToShow && this.props.fieldsToShow[param])
+   }
+
+   getFieldRender = (prop,title)=>{
+      return this.getIsPropShown(prop) && <div>
+                <b>{title}: </b> {this.props.data[prop]}
+             </div>
    }
 
    onDateSelected = (value, formattedValue)=> {

@@ -20,13 +20,13 @@ class EventForm extends Component {
     return (
        <form onSubmit={ handleSubmit }>
         <div className="event-form-date">
-          <Field name="date" hintText="datum akce" component={DatePicker} />
+          <Field className="unstyled" name="date" hintText="datum akce" component={TextField} type="date" />
         </div>
         <div>
-          <Field name="time" props={{format: "24hr"}} hintText="začátek akce" component={TimePicker} />
+          <Field className="unstyled" name="time" component={TextField} type="time" floatingLabelText="začátek akce" floatingLabelFixed={true}/>
         </div>
         <div>
-          <Field name="time_preparation" props={{format: "24hr"}} hintText="začátek akce (včetně chystání)" component={TimePicker} />
+          <Field className="unstyled" name="time_preparation" props={{format: "24hr"}} component={TextField} type="time" floatingLabelText="začátek akce (včetně chystání)" floatingLabelFixed={true}/>
         </div>
         <div>
           <Field name="name" hintText="název akce" component={TextField} />
@@ -109,23 +109,10 @@ class EventForm extends Component {
         <div>
           <Field name="phone" hintText="telefon" component={TextField} />
         </div>  
-        <RaisedButton type='submit' label="Odeslat" disabled={this.props.submitDisabled} primary={true} />
+        <RaisedButton type='submit' label="Odeslat" disabled={this.props.submitDisabled} secondary={true} />
       </form>
     )
   }
-
-  submit(json){
-    console.log(json)
-  }
-}
-
-function mapStateToProps(state, ownProps) {
-  return {
-    initialValues: {
-      date: ownProps.eventDate,
-      title: "ttttttt"
-     }}
-    
 }
 
 function validate(values) { 

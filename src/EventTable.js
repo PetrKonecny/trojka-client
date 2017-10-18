@@ -15,15 +15,17 @@ import "ag-grid/dist/styles/ag-theme-material.css";
 import { connect } from 'react-redux'
 import {fetchEventsAdmin, openSnackbar} from './actions'
 import DatePicker from 'material-ui/DatePicker'
-import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import { Link } from 'react-router-dom'
 import moment from 'moment';
 import Clear from 'material-ui-icons/Clear'
 import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField'
 import { withRouter } from 'react-router-dom'
 import { changeTableFilterDateFrom, changeTableFilterDateTo, changeTableFilterDateBoth, changeTableFilterString } from './actions'
+import MainAppBar from './MainAppBar'
+import Headroom from 'react-headroom'
 
 class EventDetail extends Component {
   render(){
@@ -114,6 +116,9 @@ class EventTable extends Component {
         super(props);
         this.state = {
             columnDefs: this.createColumnDefs(),
+            width: 0, 
+            height: 0,
+            sideBarPage: 0
         }
     }
 
@@ -140,17 +145,15 @@ class EventTable extends Component {
 
   render() {
         if(this.gridApi) { this.gridApi.onFilterChanged() }
+        let expectedTableRowCount = this.props.events && this.props.events.filter((event)=>this.doesExternalFilterPass(Object.assign({},{data: event}))).length
         let isTableEmpty =  this.props.events && this.props.events.filter((event)=>this.doesExternalFilterPass(Object.assign({},{data: event}))).length === 0
         let tableWrapperStyle = isTableEmpty ? {display: 'none'} : {display: 'block', height: '100%'}
+        let height = expectedTableRowCount *50 + 60;
           return (
-            <div style={{width: '100%',height: '100%'}} className="ag-theme-material">
-            <div className= "secondary-toolbar" style={{alignItems: 'center' }}>
-              <h3>Od:</h3> <DatePicker onChange={(event,date)=>this.props.dispatch(changeTableFilterDateFrom(date))} value={this.props.filterDateFrom} style={{paddingLeft: '16px', width:'100',overflow: 'hidden'}}></DatePicker>
-              <h3>Do:</h3> <DatePicker onChange={(event,date)=>this.props.dispatch(changeTableFilterDateTo(date))}  value={this.props.filterDateTo} style={{paddingLeft: '16px', width:'100',overflow: 'hidden'}}></DatePicker>
-              {(this.props.filterDateFrom || this.props.filterDateTo) && <IconButton onClick={()=>this.props.dispatch(changeTableFilterDateBoth(null, null))}><Clear/></IconButton>}
-              <TextField onChange={(event,string)=>this.props.dispatch(changeTableFilterString(string))} value={this.props.filterString} hintText="filtrovat" style={{paddingRight: '16px', marginLeft: 'auto'}}></TextField>
-            </div>
-                {isTableEmpty && <h2 style={{textAlign: "center", marginTop: "100px", opacity: "0.5"}}>{this.getNotFoundMessage()}</h2>}
+            <div>
+            {this.renderSecToolbar()}
+            {isTableEmpty && <h4 style={{textAlign: "center", marginTop: "32px", opacity: "0.5"}}>{this.getNotFoundMessage()}</h4>}
+            <div style={{width: '100%',height: height}} className="ag-theme-material">
                 <div style={tableWrapperStyle}>
                 <AgGridReact
                     // properties
@@ -166,8 +169,38 @@ class EventTable extends Component {
                 </AgGridReact>
                 </div>
             </div>
+            </div>
         )
+  }
+
+  renderSecToolbar = () =>{
+    let dateFrom = this.props.filterDateFrom && moment(this.props.filterDateFrom).format("YYYY-MM-DD")
+    let dateTo = this.props.filterDateTo && moment(this.props.filterDateTo).format("YYYY-MM-DD")
+    let fromElement = <div style={{overflow: 'hidden',display:'flex',alignItems: 'center', width: 'auto' ,maxWidth: '150px'}}><div>Od:</div><TextField className="unstyled" type="date" value={dateFrom} onChange={(event,date)=>this.props.dispatch(changeTableFilterDateFrom(date))}></TextField></div>
+    let toElement = <div style={{overflow: 'hidden', display:'flex',alignItems: 'center', width: 'auto', maxWidth: '150px', marginLeft: '1vw'}}><div>Do:</div><TextField className="unstyled" type="date" onChange={(event,date)=>this.props.dispatch(changeTableFilterDateTo(date))}  value={dateTo}></TextField></div>
+    let searchElement = <div style={{display:'flex',alignItems: 'center', marginLeft:'auto'}}><TextField onChange={(event,string)=>this.props.dispatch(changeTableFilterString(string))} value={this.props.filterString} hintText="filtrovat"></TextField></div>
+    if(this.state.width > 560){
+      return <div className= "secondary-toolbar" style={{alignItems: 'center' }}>
+              {fromElement}
+              {toElement}
+              {searchElement}
+            </div>
+    }else{
+            if(this.state.sideBarPage === 0){
+              return <div className= "secondary-toolbar table-toolbar-p1" style={{alignItems: 'center' }}>
+                {fromElement}
+                {toElement}
+                <IconButton style={{marginLeft: 'auto', opacity: '0.5'}} onClick={()=>{this.setState({sideBarPage: 1})}} iconClassName="fa fa-chevron-right" />
+              </div>
+            }else if(this.state.sideBarPage === 1){
+              return <div className= "secondary-toolbar table-toolbar-p2" style={{alignItems: 'center' }}>
+                <IconButton style={{marginRight: 'auto', opacity: '0.5'}} onClick={()=>{this.setState({sideBarPage: 0})}} iconClassName="fa fa-chevron-left" />
+                {searchElement}
+              </div>
+            }
     }
+  }
+
 
    tableFilterChanged = (dispatchFunction) => {
       this.props.dispatch(dispatchFunction)//.then(()=>{this.gridApi.onFilterChanged();this.forceUpdate()})
@@ -214,9 +247,22 @@ class EventTable extends Component {
       return this.nodePassesDate(node) && this.nodePassesText(node)
    }
 
-    componentWillMount() {
-      this.props.dispatch(fetchEventsAdmin()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
-    }
+   componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
+
+  componentWillMount() {
+    this.props.dispatch(fetchEventsAdmin()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
+  }
 }
 
 function mapStateToProps(state){
