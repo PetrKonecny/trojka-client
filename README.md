@@ -4,5 +4,5 @@ Simple web client for creating and managing events in calendar and table view bu
 
 Application implements calendar and table views
 
-![Creating document example](https://i.imgur.com/nwFArW3.jpg)
+![Creating document example](https://github.com/PetrKonecny/trojka-client/blob/master/trojkaset-1.jpg)
 
