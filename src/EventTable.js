@@ -26,89 +26,9 @@ import { withRouter } from 'react-router-dom'
 import { changeTableFilterDateFrom, changeTableFilterDateTo, changeTableFilterDateBoth, changeTableFilterString } from './actions'
 import MainAppBar from './MainAppBar'
 import Headroom from 'react-headroom'
-
-class EventDetail extends Component {
-  render(){
-    return(
-        <div className="EventDetail" style={{padding: '16px', paddingLeft: '32px'}}>
-            <h1>{this.props.data.name}</h1>
-          <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Datum konání: </b>{this.props.data.id}
-            </div>
-            <div className="event-detail-field">
-            <b>Datum konání: </b>{this.props.data.date}
-            </div>
-            <div className="event-detail-field">
-            <b>Čas konání: </b>{this.props.data.time}
-            </div>
-            <div className="event-detail-field">
-            <b>Čas začátku chystání: </b> {this.props.data.time_preparation}
-            </div>
-            <div className="event-detail-field">
-            <b>Místo konání: </b> {this.props.data.place}
-            </div>
-            <div className="event-detail-field">
-            <b>Typ akce: </b> {this.props.data.type}
-            </div>
-            <div className="event-detail-field">
-            <b>Odkaz na stránku: </b>{this.props.data.link}
-            </div>
-            <div className="event-detail-field">
-            <b>Předpokládaný počet osob: </b>{this.props.data.count}
-            </div>
-          </div>
-          <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Anotace: </b>{this.props.data.anotation}
-            </div>
-            <div className="event-detail-field">
-            <b>Anotace na plakát: </b>{this.props.data.anotation_poster}
-            </div>
-          </div>
-          <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Zvukař: </b>{this.props.data.sound}
-            </div>
-            <div className="event-detail-field">
-            <b>Poznámky ke zvuku: </b>{this.props.data.sound_more}
-            </div>
-            <div className="event-detail-field">
-            <b>Osvětlení: </b>{this.props.data.lights}
-            </div>
-            <div className="event-detail-field">
-            <b>Poznámky k osvětlení: </b> {this.props.data.lights_more}
-            </div>
-          </div>
-          <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Zodpovědná osoba: </b>{this.props.data.contact}
-            </div>
-            <div className="event-detail-field">
-            <b>Telefon: </b>{this.props.data.phone}
-            </div>
-            <div className="event-detail-field">
-            <b>Kontaktní email: </b>{this.props.data.mail}
-            </div>
-            <div className="event-detail-field">
-            <b>Zastupováno OSA: </b>{this.props.data.osa}
-            </div>
-          </div>
-          <div className="event-detail-field">
-            <div className="event-detail-field">
-            <b>Hodnocení: </b>{this.props.data.rating}
-            </div>
-          </div>
-          <Divider/>
-          <div style={{paddingTop: '12px'}}>
-            <RaisedButton secondary={true}  label="smazat"/>
-            <RaisedButton containerElement={<Link to={'/events/edit/'+this.props.data.id}/>}  secondary={true}  style={{marginLeft:'6px'}} label="editovat"/>
-            <RaisedButton secondary={true}  style={{marginLeft:'6px'}} label="kopírovat"/>
-          </div>
-        </div>
-      )
-  }
-}
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import {fade} from 'material-ui/utils/colorManipulator';
+import SecondaryToolbar from './SecondaryToolbar'
 
 class EventTable extends Component {
 
@@ -147,11 +67,15 @@ class EventTable extends Component {
         if(this.gridApi) { this.gridApi.onFilterChanged() }
         let expectedTableRowCount = this.props.events && this.props.events.filter((event)=>this.doesExternalFilterPass(Object.assign({},{data: event}))).length
         let isTableEmpty =  this.props.events && this.props.events.filter((event)=>this.doesExternalFilterPass(Object.assign({},{data: event}))).length === 0
-        let tableWrapperStyle = isTableEmpty ? {display: 'none'} : {display: 'block', height: '100%'}
+        let backgroundColor = this.props.muiTheme.palette.canvasColor
+        let textColor = this.props.muiTheme.palette.textColor
+        let hoverColor = fade(textColor,0.1)
+        let tableWrapperStyle = isTableEmpty ? {display: 'none',backgroundColor: backgroundColor, color: textColor} : {display: 'block', height: '100%',backgroundColor: backgroundColor, color: textColor}
         let height = expectedTableRowCount *50 + 60;
           return (
             <div>
-            {this.renderSecToolbar()}
+            <style dangerouslySetInnerHTML={{__html: ".ag-header-row{border-bottom: 1px solid "+hoverColor+" !important; color: "+fade(textColor,0.7)+" !important;} .ag-row{border: 1px solid "+hoverColor+ " !important;} .ag-row-hover{background-color:"+hoverColor+" !important;}"}} />
+            <SecondaryToolbar>{this.renderSecToolbar()}</SecondaryToolbar>
             {isTableEmpty && <h4 style={{textAlign: "center", marginTop: "32px", opacity: "0.5"}}>{this.getNotFoundMessage()}</h4>}
             <div style={{width: '100%',height: height}} className="ag-theme-material">
                 <div style={tableWrapperStyle}>
@@ -274,4 +198,4 @@ function mapStateToProps(state){
   }
 }
 
-export default withRouter(connect(mapStateToProps)(EventTable))
+export default muiThemeable()(withRouter(connect(mapStateToProps)(EventTable)))

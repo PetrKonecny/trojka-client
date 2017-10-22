@@ -16,6 +16,8 @@ import { SubmissionError } from 'redux-form'
 import { withRouter } from 'react-router-dom'
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 import './LoginIndex.css';
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import {emphasize} from 'material-ui/utils/colorManipulator';
 
  class LoginIndex extends Component{
 
@@ -33,13 +35,15 @@ import './LoginIndex.css';
 
   render() {
     const { error, handleSubmit, pristine, reset, submitting } = this.props
+    const primaryColor = this.props.muiTheme.palette.primary1Color
+    const backgroundColor = emphasize(this.props.muiTheme.palette.canvasColor)
     return (
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <h1 style={{fontSize: '400%',marginBottom: '16px'}} className={this.state.zoom? "fade-out" : ""}>TROJKA</h1>
-        <i  style={{color: '#00bcd4', fontSize: '1500%'}} className={this.getClasses()} />
+        <i  style={{color: primaryColor, fontSize: '1500%'}} className={this.getClasses()} />
       </div>
-      <form style={{padding: '16px', background: '#F5F5F6', display: 'flex', flexDirection: 'column', alignItems: 'center'}} className={this.state.zoom? "fade-out" : ""} onSubmit={handleSubmit(this.submit)}>
+      <form style={{padding: '16px', background: backgroundColor, display: 'flex', flexDirection: 'column', alignItems: 'center'}} className={this.state.zoom? "fade-out" : ""} onSubmit={handleSubmit(this.submit)}>
         <div>
           <Field hintText="zadejte heslo" name="password" type="password" component={TextField}/>
         </div>
@@ -88,6 +92,6 @@ import './LoginIndex.css';
 
 }
 
-export default withCookies(withRouter(reduxForm({
+export default muiThemeable()(withCookies(withRouter(reduxForm({
   form: 'login', 
-})(connect()(LoginIndex))))
+})(connect()(LoginIndex)))))

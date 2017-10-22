@@ -8,22 +8,23 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {  Link } from 'react-router-dom'
-
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
 class MainAppBar extends Component {
 
 
   render(){
+      const iconColor = this.props.muiTheme.palette.alternateTextColor
       if(this.props.admin){
       return( 
         <AppBar className="AppBar"
           title="Trojka"
           showMenuIconButton={false}
           iconElementRight={<div>{this.props.loggedIn && <div>
-            <IconButton className="toolbar-icon" containerElement={<Link to='/events'/>}   iconClassName="fa fa-calendar-plus-o" />
-            <IconButton className="toolbar-icon" containerElement={<Link to='/events/table'/>}   iconClassName="fa fa-file-o" />
+            <IconButton  iconStyle={{color: iconColor}} containerElement={<Link to='/events'/>}   iconClassName="fa fa-calendar-plus-o" />
+            <IconButton  iconStyle={{color: iconColor}} containerElement={<Link to='/events/table'/>}   iconClassName="fa fa-file-o" />
             <IconMenu
-              iconButtonElement={<IconButton><MoreVertIcon viewBox='0 -4 24 24' color='white'/></IconButton>}
+              iconButtonElement={<IconButton iconStyle={{color: iconColor}} ><MoreVertIcon viewBox='0 -4 24 24'/></IconButton>}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
             >
@@ -55,5 +56,5 @@ function mapStateToProps(state, props){
   }
 }
 
-export default connect(mapStateToProps)(MainAppBar)
+export default muiThemeable()(connect(mapStateToProps)(MainAppBar))
 

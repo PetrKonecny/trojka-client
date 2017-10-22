@@ -30,38 +30,41 @@ import ListBar from './ListBar'
 import ListOsa from './ListOsa'
 import Headroom from 'react-headroom'
 import MainAppBar from './MainAppBar'
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
-const PrivateRoute = ({ auth: auth, component: Component, ...rest }) => (
+const PrivateRoute = ({ auth: auth, component: Component, redirectPath: redirectPath,...rest }) => {return(
       <Route {...rest} render={props => (
         auth ? (
           <Component {...props}/>
         ) : (
           <Redirect to={{
-            pathname: '/login',
+            pathname: redirectPath,
             state: { from: props.location }
           }}/>
         )
       )}/>
-    )
+    )}
 
 class App extends Component {
 
   render(){
+    const bgColor = this.props.muiTheme.palette.canvasColor
+    const textColor = this.props.muiTheme.palette.textColor
     return (
-      <div className={"App " + (this.props.admin ? "AppAdmin" : "")}>
+      <div style={{background: bgColor, color: textColor}} className={"App " + (this.props.admin ? "AppAdmin" : "")}>
       {this.props.isFetching && <div className="Main-progress"><LinearProgress color="#000000" mode="indeterminate" /></div>}
       <Headroom><MainAppBar/></Headroom>
       {this.props.checkedLogin && 
       <Switch>
-      <Route exact path='/login' component={LoginIndex}/>
+      <PrivateRoute redirectPath="/events" auth={!this.props.loggedIn} exact path='/login' component={LoginIndex}/>
       <Route exact path='/graphic/:code' component={ListGraphic}/>
       <Route exact path='/bar/:code' component={ListBar}/>
       <Route exact path='/osa/:code' component={ListOsa}/>
-      <PrivateRoute exact auth={this.props.loggedIn} path='/events' component={EventIndex}/>
-      <PrivateRoute exact auth={this.props.loggedIn} path='/events/table' component={EventTable}/>
-      <PrivateRoute exact auth={this.props.loggedIn} path='/events/create/:eventDate' component={CreateEvent}/>
-      <PrivateRoute exact auth={this.props.loggedIn} path='/events/edit/:id' component={EditEvent}/>
-      <PrivateRoute exact auth={this.props.loggedIn} path='/events/:id' component={ShowEvent}/>
+      <PrivateRoute redirectPath='/login' exact auth={this.props.loggedIn} path='/events' component={EventIndex}/>
+      <PrivateRoute exact  redirectPath='/unauthorized' auth={this.props.admin} path='/events/table' component={EventTable}/>
+      <PrivateRoute exact  redirectPath='/login' auth={this.props.loggedIn} path='/events/create/:eventDate' component={CreateEvent}/>
+      <PrivateRoute exact  redirectPath='/unauthorized' auth={this.props.admin} path='/events/edit/:id' component={EditEvent}/>
+      <PrivateRoute exact  redirectPath='/unauthorized' auth={this.props.admin} path='/events/:id' component={ShowEvent}/>
       <Route path="*" render={()=><div><h1>INVALID ROUTE</h1></div>} status={404} />
       </Switch>
     }
@@ -102,5 +105,5 @@ function mapStateToProps(state, props){
   }
 }
 
-export default withRouter(connect(mapStateToProps)(App));
+export default withRouter(muiThemeable()(connect(mapStateToProps)(App)));
 

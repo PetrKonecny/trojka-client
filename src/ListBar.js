@@ -18,7 +18,7 @@ class ListBar extends Component {
 
 function mapStateToProps(state){
   return {
-    events: state.events.events,
+    events: state.events.events.sort((a,b)=>new Date(b.date) - new Date(a.date)),
   }
 }
 

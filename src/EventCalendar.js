@@ -16,6 +16,8 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import { logout, openSnackbar } from './actions'
 import SecondaryToolbar from './SecondaryToolbar'
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import {emphasize} from 'material-ui/utils/colorManipulator';
 
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)
@@ -24,8 +26,10 @@ BigCalendar.setLocalizer(
 class EventCalendar extends Component {
 
   render() {
-    let preparedCss = this.prepareEventCss()
-    console.log(this.state)
+    const primaryColor = this.props.muiTheme.palette.primary1Color
+    const textColor = this.props.muiTheme.palette.alternateTextColor
+    const borderAndTodayColor = emphasize(this.props.muiTheme.palette.canvasColor,0.3)
+    const preparedCss = ".rbc-month-row + .rbc-month-row{ border-top: 1px solid "+borderAndTodayColor+"! important;}  .rbc-day-bg{border-left: 1px solid "+borderAndTodayColor+" !important;} .rbc-today{background: "+borderAndTodayColor+"!important; }" + this.prepareEventCss()
     let components = {toolbar : CalendarToolbar, dateCellWrapper: Test, eventWrapper: Blank}
     if(this.state.width >= 500){
       components = {toolbar : CalendarToolbar}
@@ -38,6 +42,7 @@ class EventCalendar extends Component {
       	 events={this.props.events} 
          startAccessor="date" 
          endAccessor="date" 
+         eventPropGetter = {(event, start, end, isSelected)=>{return{style:{backgroundColor: primaryColor, color: textColor}}}}
          titleAccessor= {(event)=>event.title +" - "+ event.place}
          components = {components}
          views={['month']} 
@@ -86,9 +91,9 @@ class EventCalendar extends Component {
 
   getBgStyle = (eventArray) => {
     switch(eventArray.length){
-    case 1: return "{background: #b2ebf2}"
-    case 2: return "{background: #00bcd4}"
-    case 3: return "{background: #0097a7}"
+    case 1: return "{background:"+this.props.muiTheme.palette.primary1Color+"; opacity: 0.5;}"
+    case 2: return "{background:"+this.props.muiTheme.palette.primary1Color+"; opacity: 0.75;}"
+    case 3: return "{background:"+this.props.muiTheme.palette.primary1Color+"; opacity: 1;}"
     }
   }
 
@@ -135,5 +140,5 @@ class CalendarToolbar extends Component {
 }
 
 
-export default withRouter(EventCalendar);
+export default withRouter(muiThemeable() (EventCalendar));
 

@@ -5,10 +5,12 @@ body {
   padding: 0;
   font-family: 'Roboto', sans-serif;
   width: 100%;
+  min-height: 100vh;
 }
 
 html {
   font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
 }
 
 h1,h2,h3,h4,h5{
@@ -21,13 +23,13 @@ h1,h2,h3,h4,h5{
   height: 64px; 
   display: flex; 
   padding: 16px;
-  background: #F5F5F6; 
   box-sizing: border-box; 
   align-items: center;
 }
 
 .App{
   width: 100%;
+  min-height: 100vh;
 }
 
 .content{
@@ -79,7 +81,6 @@ h1,h2,h3,h4,h5{
   box-sizing: border-box;
   max-height: calc(100% - 64px);
   position: relative;
-  z-index: -1;
 }
 
 .unstyled input::-webkit-inner-spin-button
@@ -122,10 +123,6 @@ h1,h2,h3,h4,h5{
 h4{
 }
 
-.toolbar-icon span{
-  color: white !important;
-}
-
 #root {
 	height: 100%;
 }
@@ -135,6 +132,7 @@ h4{
 }
 
 .EventIndex{
+  animation: 0.2s linear 0s 1 slideInLeft;
   height: 100vh;
 }
 
@@ -158,9 +156,6 @@ h4{
   padding: 3px;
 }
 
-.rbc-month-row{
-	}
-
 .rbc-day-bg{
 }
 
@@ -170,7 +165,6 @@ h4{
 }
 
 .rbc-event{
-	background: #00bcd4 !important;
 	border-radius: 0 !important;
 	padding: 6px !important;
 	font-weight: bold !important;

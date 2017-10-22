@@ -45,11 +45,11 @@ class EventDetail extends Component {
             {this.getFieldRender('rating','Hodnocení')}
           </div>
           <Divider/>
-          <div style={{paddingTop: '12px'}}>
+          {this.props.showControlls && <div style={{paddingTop: '12px'}}>
             <RaisedButton secondary={true} onClick={this.onDeleteEventClicked}  label="smazat"/>
             <RaisedButton containerElement={<Link to={'/events/edit/'+this.props.data.id}/>}  secondary={true}  style={{marginLeft:'6px'}} label="editovat"/>
             <RaisedButton secondary={true} onClick={this.onCopyEventClicked} style={{marginLeft:'6px'}} label="kopírovat"/>
-          </div>
+          </div>}
             <DatePicker DateTimeFormat ={global.Intl.DateTimeFormat} locale="cs-CS" onChange={this.onDateSelected} style={{ display: 'none' }} ref='datepicker' />
         </div>
       )
