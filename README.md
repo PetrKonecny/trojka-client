@@ -14,7 +14,7 @@ It is easily themeable thanks to React Material:
 
 Optimized for mobile:
 
-![Mobile calendar](https://github.com/PetrKonecny/trojka-client/blob/master/trojkaset-4.jpg)
-![Scroll](https://github.com/PetrKonecny/trojka-client/blob/master/trojkaset-scroll.gif)
+<img src="https://github.com/PetrKonecny/trojka-client/blob/master/trojkaset-4.jpg" width="25%">
+<img src="https://github.com/PetrKonecny/trojka-client/blob/master/trojkaset-scroll.gif" width="25%">
 
 
