@@ -10,7 +10,7 @@ class ShowEvent extends Component {
   render(){
     return(
       <div className="content">
-        {this.props.event && <EventDetail showControlls={true} data={this.props.event}></EventDetail>}
+        {this.props.event && <EventDetail showControls={true} data={this.props.event}></EventDetail>}
       </div>
     )
   }

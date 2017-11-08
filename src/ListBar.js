@@ -6,7 +6,7 @@ import EventDetail from './EventDetail'
 
 class ListBar extends Component {
 	render(){
-		return (<EventList events={this.props.events}><EventDetail hideFields={true} fieldsToShow={{name:true, date:true,time:true, time_preparation: true, contact: true, org: true, mail: true, phone: true, place:true}}></EventDetail></EventList>)
+		return (<EventList events={this.props.events}><EventDetail showOnly={['name','date','time','time_preparation','contact','org','mail','phone', 'place']}></EventDetail></EventList>)
 	}
 
 

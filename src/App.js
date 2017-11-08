@@ -45,11 +45,11 @@ const PrivateRoute = ({ auth: auth, component: Component, redirectPath: redirect
       )}/>
     )}
 
-class App extends Component {
+export class App extends Component {
 
   render(){
-    const bgColor = this.props.muiTheme.palette.canvasColor
-    const textColor = this.props.muiTheme.palette.textColor
+    const bgColor = this.props.muiTheme && this.props.muiTheme.palette.canvasColor
+    const textColor = this.props.muiTheme && this.props.muiTheme.palette.textColor
     return (
       <div style={{background: bgColor, color: textColor}} className={"App " + (this.props.admin ? "AppAdmin" : "")}>
       {this.props.isFetching && <div className="Main-progress"><LinearProgress color="#000000" mode="indeterminate" /></div>}
@@ -68,12 +68,12 @@ class App extends Component {
       <Route path="*" render={()=><div><h1>INVALID ROUTE</h1></div>} status={404} />
       </Switch>
     }
-      <Snackbar
+      {this.props.snackbarMessage && <Snackbar
             open={this.props.snackbarOpen}
             message= {this.props.snackbarMessage}
             autoHideDuration={4000}
             onRequestClose={ () => this.props.dispatch(closeSnackbar())}
-         />
+       />}
       </div>
     )
   }
@@ -83,12 +83,12 @@ class App extends Component {
   }
 
   loginCheck = ()=>{
-    this.props.dispatch(checkLoginAndLoadCode()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
+    this.props.dispatch && this.props.dispatch(checkLoginAndLoadCode()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
   }
 
 
   onLogoutClicked = ()=>{
-    this.props.dispatch(logout())
+    this.props.dispatch && this.props.dispatch(logout())
     .catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
   }
 }

@@ -7,13 +7,12 @@ import { editEvent, openSnackbar, fetchEventsAdmin } from './actions'
 import Snackbar from 'material-ui/Snackbar';
 import { withRouter } from 'react-router-dom'
 
-class EditEvent extends Component {
+export class EditEvent extends Component {
 
   render() {
     if(this.props.event && this.props.event.id){
-      let date = new Date(this.props.event.date)
-      let eventWithDates = Object.assign({},this.props.event,{place: this.getPlace(this.props.event.place)})
-      return(<div className="EditEvent"><EventForm  onSubmit={this.onSubmit} initialValues={eventWithDates} /></div>)
+      let eventWithPlace = Object.assign({},this.props.event,{place: this.getPlace(this.props.event.place)})
+      return(<div className="EditEvent"><EventForm className="event-form" onSubmit={this.onSubmit} initialValues={eventWithPlace} /></div>)
     }else{
       return null
     }
@@ -24,7 +23,7 @@ class EditEvent extends Component {
   }
 
   componentWillMount() {
-      this.props.dispatch(fetchEventsAdmin()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
+      this.props.dispatch && this.props.dispatch(fetchEventsAdmin()).catch(()=>this.props.dispatch(openSnackbar('Chyba komunikace se serverem')))
   }
 
   getPlace(place){
@@ -39,17 +38,18 @@ class EditEvent extends Component {
 
   successCallback = ()=>{
       this.props.history.push('/events/table')
-      this.props.dispatch(openSnackbar("Akce úspěšně upravena"))
+      this.props.dispatch && this.props.dispatch(openSnackbar("Akce úspěšně upravena"))
   }
   
   errorCallback = ()=>{
-      this.props.dispatch(openSnackbar("Chyba při upravování akce"))
+      this.props.dispatch && this.props.dispatch(openSnackbar("Chyba při upravování akce"))
   }
 }
 
 function mapStateToProps(state, props){
   return {
-    event: state.events.events.find((event)=>{return event.id === props.match.params.id})
+    event: props.event ? props.event : (props.match && props.match.params.id ? state.events.events.find((event)=>{return event.id === props.match.params.id}) : undefined),
+    isFetching: state.events.isFetching
   }
 }
 

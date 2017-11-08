@@ -23,33 +23,41 @@ BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)
 );
 
-class EventCalendar extends Component {
+export class EventCalendar extends Component {
 
   render() {
-    const primaryColor = this.props.muiTheme.palette.primary1Color
-    const textColor = this.props.muiTheme.palette.alternateTextColor
-    const borderAndTodayColor = emphasize(this.props.muiTheme.palette.canvasColor,0.3)
-    const preparedCss = ".rbc-month-row + .rbc-month-row{ border-top: 1px solid "+borderAndTodayColor+"! important;}  .rbc-day-bg{border-left: 1px solid "+borderAndTodayColor+" !important;} .rbc-today{background: "+borderAndTodayColor+"!important; }" + this.prepareEventCss()
-    let components = {toolbar : CalendarToolbar, dateCellWrapper: Test, eventWrapper: Blank}
-    if(this.state.width >= 500){
-      components = {toolbar : CalendarToolbar}
+    if(this.props.events){
+      const primaryColor = this.props.muiTheme && this.props.muiTheme.palette.primary1Color
+      const textColor = this.props.muiTheme && this.props.muiTheme.palette.alternateTextColor
+      const borderAndTodayColor = this.props.muiTheme && emphasize(this.props.muiTheme.palette.canvasColor,0.3)
+      const preparedCss = ".rbc-month-row + .rbc-month-row{ border-top: 1px solid "+borderAndTodayColor
+        +"! important;}  .rbc-day-bg{border-left: 1px solid "+borderAndTodayColor+" !important;} .rbc-today{background: "
+        +borderAndTodayColor+"!important; }" 
+        + this.prepareEventCss(this.props.events, primaryColor)
+      let components = {toolbar : CalendarToolbar, dateCellWrapper: Test, eventWrapper: Blank}
+      if(this.state.width >= 500){
+        components = {toolbar : CalendarToolbar}
+      }
+      return (
+      <div className="event-calendar-wrapper" style={{height: '100%', overflow: 'auto'}}>
+        <style dangerouslySetInnerHTML={{__html: preparedCss}} />
+         <BigCalendar 
+           className="event-calendar"
+           selectable
+        	 events={this.props.events} 
+           startAccessor="date" 
+           endAccessor="date" 
+           eventPropGetter = {(event, start, end, isSelected)=>{return{style:{backgroundColor: primaryColor, color: textColor}}}}
+           titleAccessor= {(event)=>event.title +" - "+ event.place}
+           components = {components}
+           views={['month']} 
+           onSelectSlot={(selected)=>{this.props.history.push('/events/create/'+moment(selected.start).format('YYYY-MM-DD'))}}
+      	/>
+      </div>
+      )
+    }else{
+      return null
     }
-    return (
-    <div className="EventCalendar" style={{height: '100%', overflow: 'auto'}}>
-      <style dangerouslySetInnerHTML={{__html: preparedCss}} />
-       <BigCalendar 
-         selectable
-      	 events={this.props.events} 
-         startAccessor="date" 
-         endAccessor="date" 
-         eventPropGetter = {(event, start, end, isSelected)=>{return{style:{backgroundColor: primaryColor, color: textColor}}}}
-         titleAccessor= {(event)=>event.title +" - "+ event.place}
-         components = {components}
-         views={['month']} 
-         onSelectSlot={(selected)=>{this.props.history.push('/events/create/'+moment(selected.start).format('YYYY-MM-DD'))}}
-    	/>
-    </div>
-    )
   }
 
   constructor(props) {
@@ -78,22 +86,21 @@ class EventCalendar extends Component {
     return array; 
   }
 
-  prepareEventCss = () => {
-    console.log(this.groupEventsByDate(this.props.events))
-    return this.groupEventsByDate(this.props.events).map(
+  prepareEventCss = (eventArray, color) => {
+    return this.groupEventsByDate(eventArray).map(
           (array) =>{ 
             let date = moment(array[0].date, "YYYY-MM-DD").toDate()
             let className = "date-bg" +date.getFullYear()+""+ date.getMonth() + "" + date.getDate() + ""
-            return "."+className+this.getBgStyle(array)
+            return "."+className+this.getBgStyle(array, color)
           }
     ).join(' ')   
   }
 
-  getBgStyle = (eventArray) => {
+  getBgStyle = (eventArray, color) => {
     switch(eventArray.length){
-    case 1: return "{background:"+this.props.muiTheme.palette.primary1Color+"; opacity: 0.5;}"
-    case 2: return "{background:"+this.props.muiTheme.palette.primary1Color+"; opacity: 0.75;}"
-    case 3: return "{background:"+this.props.muiTheme.palette.primary1Color+"; opacity: 1;}"
+    case 1: return "{background:"+color+"; opacity: 0.5;}"
+    case 2: return "{background:"+color+"; opacity: 0.75;}"
+    case 3: return "{background:"+color+"; opacity: 1;}"
     }
   }
 
@@ -106,19 +113,12 @@ class Test extends Component {
    return (<div className={"date-bg"+this.props.value.getFullYear()+""+this.props.value.getMonth()+""+this.props.value.getDate()+""} style={{color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' ,borderLeft: '1px solid #DDD', width: '100%', height: '100%' , diplay: 'flex'}}></div>) 
   }
 
-  componentDidMount(){
-
-  }
-
 }
 
 class Blank extends Component {
+  
   render() {
    return (<div></div>) 
-  }
-
-  componentDidMount(){
-
   }
 
 }

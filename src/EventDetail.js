@@ -8,13 +8,14 @@ import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { connect } from 'react-redux'
 
-class EventDetail extends Component {
+export class EventDetail extends Component {
   render(){
     if(this.props.data && this.props.data.id){
     return(
         <div className="EventDetail" style={{boxSizing: 'border-box', padding: '16px', paddingLeft: '32px'}}>
-            <h1>{this.getIsPropShown('name') && this.props.data.name}</h1>
+          {this.getIsPropShown('name') && <h1 className="event-detail-name">{this.props.data.name}</h1>}
           <div className="event-detail-field">
+            {this.getFieldRender('id','Id')}
             {this.getFieldRender('date','Datum konání')}
             {this.getFieldRender('time','Čas konání')}
             {this.getFieldRender('time_preparation','Čas začátku chystání')}
@@ -32,7 +33,7 @@ class EventDetail extends Component {
             {this.getFieldRender('sound_more','Poznámky ke zvuku')}
             {this.getFieldRender('lights','Osvětlení')}
             {this.getFieldRender('lights_more','Poznámky k osvětlení')}
-            {this.getFieldRender('count','Předpokládaný počet osob')}
+            {this.getFieldRender('projector','Projektor')}
           </div>
           <div className="event-detail-field">
             {this.getFieldRender('contact','Zodpovědná osoba')}
@@ -45,7 +46,7 @@ class EventDetail extends Component {
             {this.getFieldRender('rating','Hodnocení')}
           </div>
           <Divider/>
-          {this.props.showControlls && <div style={{paddingTop: '12px'}}>
+          {this.props.showControls && <div className="event-detail-controls" style={{paddingTop: '12px'}}>
             <RaisedButton secondary={true} onClick={this.onDeleteEventClicked}  label="smazat"/>
             <RaisedButton containerElement={<Link to={'/events/edit/'+this.props.data.id}/>}  secondary={true}  style={{marginLeft:'6px'}} label="editovat"/>
             <RaisedButton secondary={true} onClick={this.onCopyEventClicked} style={{marginLeft:'6px'}} label="kopírovat"/>
@@ -62,11 +63,11 @@ class EventDetail extends Component {
    }
 
    getIsPropShown = (param)=>{
-    return !this.props.hideFields || (this.props.fieldsToShow && this.props.fieldsToShow[param])
+      return this.props.data[param] && (!this.props.showOnly || this.props.showOnly.find((prop)=>{return prop === param}))
    }
 
    getFieldRender = (prop,title)=>{
-      return this.getIsPropShown(prop) && <div>
+      return this.getIsPropShown(prop) && <div className={"event-detail-"+prop}>
                 <b>{title}: </b> {this.props.data[prop]}
              </div>
    }
@@ -86,7 +87,7 @@ class EventDetail extends Component {
     }
     
     errorCallbackCopy = ()=>{
-        this.props.dispatch(openSnackbar("Chyba při kopírování akce"))
+      this.props.dispatch(openSnackbar("Chyba při kopírování akce"))
     }
 
     successCallbackDelete = ()=>{
@@ -95,7 +96,7 @@ class EventDetail extends Component {
     }
     
     errorCallbackDelete = ()=>{
-        this.props.dispatch(openSnackbar("Chyba při mazání akce"))
+      this.props.dispatch(openSnackbar("Chyba při mazání akce"))
     }
 }
 

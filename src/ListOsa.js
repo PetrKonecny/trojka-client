@@ -6,7 +6,7 @@ import EventDetail from './EventDetail'
 
 class ListOsa extends Component {
 	render(){
-		return (<EventList events={this.props.events}><EventDetail hideFields={true} fieldsToShow={{name:true,date:true,contact:true,osa:true}}></EventDetail></EventList>)
+		return (<EventList events={this.props.events}><EventDetail showOnly={['name','date','contact','osa']}></EventDetail></EventList>)
 	}
 
 

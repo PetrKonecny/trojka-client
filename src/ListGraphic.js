@@ -6,7 +6,7 @@ import EventDetail from './EventDetail'
 
 class ListGraphic extends Component {
 	render(){
-		return (<EventList events={this.props.events}><EventDetail hideFields={true} fieldsToShow={{name:true,date:true,time:true,place:true,anotation:true,anotation_poster:true}}></EventDetail></EventList>)
+		return (<EventList events={this.props.events}><EventDetail showOnly={['name','date','time','place','anotation','anotation_poster']}></EventDetail></EventList>)
 	}
 
 

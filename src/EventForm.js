@@ -12,7 +12,7 @@ import {
 import RadioButton from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
-class EventForm extends Component {
+export class EventForm extends Component {
 
 
   render() {

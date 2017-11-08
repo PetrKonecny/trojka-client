@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8080/",
-  "homepage" : "http://trojkaset.3trojka.cz/react",
+  "homepage": "http://trojkaset.3trojka.cz/react",
   "dependencies": {
     "@devexpress/dx-react-core": "^1.0.0-alpha.9",
     "@devexpress/dx-react-grid": "^1.0.0-alpha.9",
@@ -19,6 +19,7 @@
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.11",
+    "react-test-renderer": "^15.6.1",
     "redux": "^3.7.2",
     "redux-form": "^7.0.3",
     "redux-form-material-ui": "^4.2.0",
@@ -30,5 +31,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "enzyme": "^3.1.1",
+    "enzyme-adapter-react-15": "^1.0.5"
   }
 }
